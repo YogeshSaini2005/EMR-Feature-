@@ -1,16 +1,16 @@
-import json
-from datetime import datetime, timedelta
+# import json
+# from datetime import datetime, timedelta
 
-# --- Utility Functions for Mock Data ---
-def get_dynamic_dates():
-    """Generates TODAY, YESTERDAY, TOMORROW, and NEXT_WEEK dates in YYYY-MM-DD format."""
-    TODAY = datetime.now().strftime('%Y-%m-%d')
-    YESTERDAY = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    TOMORROW = (datetime.now() + timedelta(days=1)).strftime('%Y-%MM-%d').replace('MM', 'm') # Fix for month
-    NEXT_WEEK = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
-    return TODAY, YESTERDAY, TOMORROW, NEXT_WEEK
+# # Utility Functions for Mock Data ---
+# def get_dynamic_dates():
+#     """Generates TODAY, YESTERDAY, TOMORROW, and NEXT_WEEK dates in YYYY-MM-DD format."""
+#     TODAY = datetime.now().strftime('%Y-%m-%d')
+#     YESTERDAY = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+#     TOMORROW = (datetime.now() + timedelta(days=1)).strftime('%Y-%MM-%d').replace('MM', 'm') # Fix for month
+#     NEXT_WEEK = (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')
+#     return TODAY, YESTERDAY, TOMORROW, NEXT_WEEK
 
-TODAY, YESTERDAY, TOMORROW, NEXT_WEEK = get_dynamic_dates()
+# TODAY, YESTERDAY, TOMORROW, NEXT_WEEK = get_dynamic_dates()
 
 APPOINTMENTS_MOCK_DATA = [{
   'id':1,

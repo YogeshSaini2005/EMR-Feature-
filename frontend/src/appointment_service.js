@@ -1,44 +1,38 @@
-// --- Utility to get dynamic dates in YYYY-MM-DD format ---
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 const TODAY = getTodayDate();
-const YESTERDAY = new Date(Date.now() - 86400000).toISOString().split('T')[0]; // 86400000ms = 1 day
+const YESTERDAY = new Date(Date.now() - 86400000).toISOString().split('T')[0]; 
 const TOMORROW = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 const NEXT_WEEK = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
-
-// --- CORRECTED MOCK DATA ---
-// FIX 1: Dates are now dynamic (TODAY, YESTERDAY, etc.)
-// FIX 2: Added missing 'reason' and 'consultation' fields
-// FIX 3: Corrected 'duration' to string and 'mode' to 'Virtual'/'In-Person'
 const APPOINTMENTS_MOCK_DATA = [{
   'id':1,
   'name':'yogesh',
-  'date': TODAY, // FIX: Set to today for 'Today' tab
+  'date': TODAY, 
   'time':'10:00 AM',
   'status':'Confirmed',
   'doctorName': 'Dr. Rinku',
-  'duration' :'30 min', // FIX: Changed to string
-  'mode': 'In-Person', // FIX: Changed to match mode logic
-  'reason': 'Routine Annual Check', // FIX: Added missing field
-  'consultation': 'Annual Physical Exam', // FIX: Added missing field
+  'duration' :'30 min', 
+  'mode': 'In-Person', 
+  'reason': 'Routine Annual Check', 
+  'consultation': 'Annual Physical Exam', 
   },
   {
   'id':2,
   'name':'ravi',
-  'date': TOMORROW, // FIX: Set to tomorrow for 'Upcoming' tab
+  'date': TOMORROW, 
   'time':'10:00 AM',
-  'status':'Upcoming', // FIX: Status changed for filtering
+  'status':'Upcoming', 
   'doctorName': 'Dr. Sahil',
   'duration' :'30 min',
-  'mode': 'Virtual', // FIX: Changed to 'Virtual' for dashboard count
+  'mode': 'Virtual', 
   'reason': 'Follow-up for rash',
   'consultation': 'Dermatology Review',
   },
   {
   'id':3,
   'name':'ruby',
-  'date': YESTERDAY, // FIX: Set to yesterday for 'Past' tab
+  'date': YESTERDAY, 
   'time':'12:00 PM',
-  'status':'Completed', // FIX: Status changed for filtering
+  'status':'Completed', 
   'doctorName': 'Dr. Sahil',
   'duration' :'30 min',
   'mode': 'In-Person',
@@ -48,7 +42,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':4,
   'name':'keshav',
-  'date': NEXT_WEEK, // Set far in future
+  'date': NEXT_WEEK, 
   'time':'12:00 PM',
   'status':'Upcoming',
   'doctorName': 'Dr. Payal',
@@ -60,7 +54,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':5,
   'name':'jinal',
-  'date': TODAY, // Set to today
+  'date': TODAY, 
   'time':'12:00 PM',
   'status':'Scheduled',
   'doctorName': 'Dr. Payal',
@@ -72,7 +66,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':6,
   'name':'karan',
-  'date': TODAY, // Set to today
+  'date': TODAY, 
   'time':'09:00 AM',
   'status':'Confirmed',
   'doctorName': 'Dr. Yuvi',
@@ -84,7 +78,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':7,
   'name':'pawan',
-  'date': YESTERDAY, // Set to yesterday
+  'date': YESTERDAY, 
   'time':'09:00 AM',
   'status':'Cancelled',
   'doctorName': 'Dr. yuvi',
@@ -96,7 +90,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':8,
   'name':'sneha',
-  'date': TOMORROW, // Set to tomorrow
+  'date': TOMORROW,
   'time':'10:00 AM',
   'status':'Confirmed',
   'doctorName': 'Dr. Rinku',
@@ -108,7 +102,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':9,
   'name':'aryan',
-  'date': YESTERDAY, // Set to yesterday
+  'date': YESTERDAY, 
   'time':'11:00 AM',
   'status':'Completed',
   'doctorName': 'Dr. priya',
@@ -120,7 +114,7 @@ const APPOINTMENTS_MOCK_DATA = [{
   {
   'id':10,
   'name':'aarav',
-  'date': NEXT_WEEK, // Set far in future
+  'date': NEXT_WEEK, 
   'time':'11:20 AM',
   'status':'Upcoming',
   'doctorName': 'Dr. sweta',
@@ -145,9 +139,6 @@ export function getAppointments(filters = {}) {
     },100);
   });
 }
-
-// NOTE: This mutation relies on the appointment object being modified
-// in place within the global APPOINTMENTS_MOCK_DATA array.
 export function updateAppointmentStatus(id, newStatus){
   return new Promise(resolve => {
     setTimeout(() => {

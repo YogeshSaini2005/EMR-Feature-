@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
-// Define the full list of required status options
+//  full list of required status options
 const STATUS_OPTIONS = ['Scheduled', 'Confirmed', 'Completed', 'Cancelled'];
 
 // Define the initial state with ALL required fields
 const initialFormState = {
   name: '',             // Patient Name
   doctorName: '',       // Doctor Name
-  date: '',             // Date (YYYY-MM-DD format)
-  time: '',             // Time (HH:MM format)
+  date: '',             // Date 
+  time: '',             // Time 
   status: 'Scheduled',  // Default Status
-  reason: '',           // Reason for Visit (MISSING FIELD)
-  consultation: '',     // Consultation Type (MISSING FIELD)
+  reason: '',           // Reason for Visit 
+  consultation: '',     // Consultation Type 
   duration: '30 min',   // Default duration (required by AppointmentCard)
   mode: 'In-Person',    // Default mode (required by AppointmentCard)
 };
@@ -26,13 +26,11 @@ export default function AppointmentForm({ onSave, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // 💥 Important: onSave receives the full data structure
     onSave(formData);
   };
 
   return (
-    // Modal container style (use fixed sizing for consistency)
+    
     <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add New Appointment</h2>
       
@@ -50,7 +48,7 @@ export default function AppointmentForm({ onSave, onCancel }) {
           <input type="text" id="doctorName" name="doctorName" value={formData.doctorName} onChange={handleChange} required className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
         </div>
 
-        {/* Date and Time (Side-by-Side) */}
+        {/* Date and Time */}
         <div className="flex space-x-4 mb-4">
           <div className="flex-1">
             <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date (YYYY-MM-DD)</label>
@@ -72,13 +70,13 @@ export default function AppointmentForm({ onSave, onCancel }) {
           </select>
         </div>
 
-        {/* 💥 NEW FIELD: Reason for Visit */}
+        {/*Reason for Visit */}
         <div className="mb-4">
           <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-1">Reason for Visit</label>
           <input type="text" id="reason" name="reason" value={formData.reason} onChange={handleChange} required className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Severe headache, routine check-up" />
         </div>
 
-        {/* 💥 NEW FIELD: Consultation Type */}
+        {/* Consultation Type */}
         <div className="mb-6">
           <label htmlFor="consultation" className="block text-sm font-medium text-gray-700 mb-1">Consultation Type</label>
           <input type="text" id="consultation" name="consultation" value={formData.consultation} onChange={handleChange} required className="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Neurology Consultation, Annual Physical" />
