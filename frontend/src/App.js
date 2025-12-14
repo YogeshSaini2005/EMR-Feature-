@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import AppointmentManagentView from "./EMR_Frontend_Assignment";
+import AppointmentManagementView from "./EMR_Frontend_Assignment";
 import Calendar from "./Calendar";
 
 function App(){
@@ -8,12 +8,12 @@ function App(){
   <div className = "min-h-screen bg-gray-100 flex">
     {/*left calendar*/}
     <aside className="w-1/4 bg-white border-r p-4">
-      <Calendar onDateSelect= {setSelectedDate} />
+      <Calendar onSelectDate= {setSelectedDate} />
     </aside>
 
     {/*right appointment management view*/}
     <main className="flex-1 p-6">
-      <AppointmentManagentView selectedDate={selectedDate}/> 
+      <AppointmentManagementView selectedDate={selectedDate}/> 
     </main> 
   </div>
 
