@@ -1,19 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getAppointments, updateAppointmentStatus } from "./appointment_service";
+// IMPORT THE CALENDAR LIBRARY
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Import default styles for the calendar
 
-// Import Custom Components (Ensure these files are in the same directory: src/)
+// Ensure the path to your service file is correct
+import { getAppointments, updateAppointmentStatus } from "./appointment_service"; 
+
+// Import Custom Components (Ensure these files are in the same directory)
 import DashboardCards from "./DashboardCards";
 import StatusTabs from "./StatusTabs";
 import AppointmentCard from "./AppointmentCard";
 import StatusLegend from "./StatusLegend"; 
 import AppointmentForm from "./AppointmentForm"; 
 
+
 // Utility function to get today's date in YYYY-MM-DD format for filtering
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 
-// --- Define Status and Doctor Options based on your mock data ---
+// --- Define Options based on your mock data ---
 const DOCTOR_OPTIONS = ['Dr. Rinku', 'Dr. Sahil', 'Dr. Payal', 'Dr. Yuvi', 'Dr. priya', 'Dr. sweta'];
 const STATUS_OPTIONS = ['Confirmed', 'Scheduled', 'Upcoming', 'Cancelled', 'Completed'];
+
 
 export default function AppointmentManagementView() {
   const [appointments, setAppointments] = useState([]);
@@ -21,19 +28,20 @@ export default function AppointmentManagementView() {
   const [activeTab, setActiveTab] = useState('All');     
   const [showForm, setShowForm] = useState(false);       
   
-  // 💥 NEW STATES FOR DROPDOWN FILTERS
+  // States for Dropdown Filters
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('All');
   const [selectedDoctorFilter, setSelectedDoctorFilter] = useState('All');
 
 
-  // --- 1. DATA FETCHING (Task 2.1 & 2.2) ---
-  // Fetches data when selectedDate or primary dropdown filters change
+  // --- 1. DATA FETCHING ---
   useEffect(() => {
-    // 💥 Updated filters object to send to getAppointments
+    const formatSelectedDate = (date) => {
+        if (!date) return null;
+        return date.toISOString().split('T')[0];
+    };
+    
     const filters = {
-      date: selectedDate, // Calendar date filter
-      // Note: We only send the status filter if the tab is 'All'
-      // Otherwise, we filter manually in useMemo (see below)
+      date: formatSelectedDate(selectedDate), 
       status: selectedStatusFilter !== 'All' ? selectedStatusFilter : null, 
     };
 
@@ -41,13 +49,11 @@ export default function AppointmentManagementView() {
       setAppointments(data);
     });
     
-    // Reset tab filter when date changes, to prevent conflict
     setActiveTab('All');
     
-    // Rerun when date or status filter changes
   }, [selectedDate, selectedStatusFilter]); 
 
-  // --- 2. STATUS UPDATE (Task 2.4) ---
+  // --- 2. STATUS UPDATE ---
   const handleUpdateStatus = async (id, newStatus) => {
     try {
       const updated = await updateAppointmentStatus(id, newStatus);
@@ -57,7 +63,8 @@ export default function AppointmentManagementView() {
             prev.map(a => (a.id === updated.id ? updated : a))
           );
       } else {
-          console.error(`Status update failed for ID ${id}. API returned an invalid object or undefined.`, updated);
+          // 💥 FIX APPLIED HERE: Changed double quotes to backticks (`...`)
+          console.error(`Status update failed for ID ${id}. API returned invalid data.`, updated);
       }
 
     } catch (error) {
@@ -65,13 +72,12 @@ export default function AppointmentManagementView() {
     }
   };
 
-  // --- 3. TAB & DOCTOR FILTERING LOGIC (Task 2.3) ---
-  // Calculates the list of appointments to display based on the selected tab and doctor filter
+  // --- 3. TAB & DOCTOR FILTERING LOGIC ---
   const filteredAppointments = useMemo(() => {
     const today = getTodayDate();
     let list = appointments;
 
-    // 1. Apply Tab Filtering (Upcoming/Today/Past)
+    // 1. Apply Tab Filtering
     if (activeTab === 'Today') {
       list = list.filter(appt => appt.date === today);
     } else if (activeTab === 'Upcoming') {
@@ -80,18 +86,15 @@ export default function AppointmentManagementView() {
       list = list.filter(appt => appt.date < today);
     }
     
-    // 2. 💥 Apply Doctor Filter (local client-side filter)
+    // 2. Apply Doctor Filter
     if (selectedDoctorFilter !== 'All') {
         list = list.filter(appt => appt.doctorName === selectedDoctorFilter);
     }
 
-    // 3. Since the status filter is handled in useEffect/getAppointments, 
-    // we only need to filter by doctor and tab here.
     return list; 
-  }, [appointments, activeTab, selectedDoctorFilter]); // Dependency on selectedDoctorFilter
+  }, [appointments, activeTab, selectedDoctorFilter]); 
 
   // --- Dashboard Card Counts Calculation ---
-  // (No change needed here)
   const counts = useMemo(() => {
     const today = getTodayDate();
     return {
@@ -101,20 +104,18 @@ export default function AppointmentManagementView() {
       virtualCount: appointments.filter(app => app.mode === 'Virtual').length, 
     };
   }, [appointments]);
-
-  // --- 4. CALENDAR CLICK HANDLER (Task 2.2) ---
-  const handleDateClick = (date) => {
+  
+  // --- 4. CALENDAR CHANGE HANDLER ---
+  const handleDateChange = (date) => {
       setSelectedDate(date); 
   };
   
-  // --- 5. 💥 HANDLERS FOR DROPDOWN CHANGES ---
+  // --- 5. HANDLERS FOR DROPDOWN CHANGES ---
   const handleStatusChange = (e) => {
-      // This triggers useEffect to re-call getAppointments with the new status
       setSelectedStatusFilter(e.target.value);
   }
   
   const handleDoctorChange = (e) => {
-      // This triggers useMemo to re-filter the local list
       setSelectedDoctorFilter(e.target.value);
   }
 
@@ -149,18 +150,25 @@ export default function AppointmentManagementView() {
           <div className="w-1/4 pr-6 border-r border-gray-200">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">Calendar</h2>
 
-            {/* Placeholder for Calendar Component */}
-            <div className="h-64 bg-gray-50 p-4 flex items-center justify-center rounded-lg border">
-                <p className="text-sm text-gray-500 text-center">
-                    **Calendar Component**<br />
-                    Clicking a date calls `handleDateClick`
-                </p>
+            {/* CORRECTLY PLACED FUNCTIONAL REACT-CALENDAR (LEFT COLUMN) */}
+            <div className='mb-4'>
+                <Calendar 
+                    onChange={handleDateChange} 
+                    value={selectedDate} 
+                    view="month" 
+                    maxDetail="month"
+                    className="border-0 rounded-lg shadow-md"
+                />
             </div>
-            {selectedDate && (
-                 <p className="text-sm text-gray-500 mt-2 text-center">
-                    Active Filter: <b>{selectedDate}</b>
-                </p>
-            )}
+            
+            {/* Clear Filter Button */}
+            <button
+                onClick={() => setSelectedDate(null)} 
+                className="w-full text-center p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-sm font-medium border border-gray-200"
+            >
+                Clear Date Filter
+            </button>
+
 
             {/* Status Legends */}
             <StatusLegend />
@@ -169,7 +177,7 @@ export default function AppointmentManagementView() {
           {/* RIGHT COLUMN: Filters, Tabs, and Appointment List (w-3/4) */}
           <div className="w-3/4 pl-6">
             
-            {/* Status Tabs (Task 2.3 Integration) */}
+            {/* Status Tabs */}
             <StatusTabs activeTab={activeTab} onTabChange={setActiveTab} />
             
             {/* Search and Filter Bar (Connected Dropdowns) */}
@@ -180,7 +188,7 @@ export default function AppointmentManagementView() {
                     className="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 />
                 
-                {/* 💥 STATUS DROPDOWN INTEGRATION */}
+                {/* STATUS DROPDOWN INTEGRATION */}
                 <select 
                     className="p-2 border border-gray-300 rounded-lg w-32 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedStatusFilter}
@@ -192,7 +200,7 @@ export default function AppointmentManagementView() {
                     ))}
                 </select>
                 
-                {/* 💥 DOCTOR DROPDOWN INTEGRATION */}
+                {/* DOCTOR DROPDOWN INTEGRATION */}
                 <select 
                     className="p-2 border border-gray-300 rounded-lg w-32 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedDoctorFilter}
