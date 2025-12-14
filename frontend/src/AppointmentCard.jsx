@@ -4,9 +4,9 @@ import { BsPerson, BsCalendar, BsClock, BsGeoAlt, BsPencilSquare, BsTrash } from
 /**
  * Renders a single detailed appointment card based on the UI mockup.
  *
- * @param {object} props
- * @param {object} props.appointment - The appointment data object.
- * @param {function} props.onUpdateStatus - Function to update the appointment status.
+   @param {object} props
+   @param {object} props.appointment 
+   @param {function} props.onUpdateStatus - update the appointment status.
  */
 const AppointmentCard = ({ appointment, onUpdateStatus }) => {
     // Helper function to determine badge color based on status
@@ -24,8 +24,6 @@ const AppointmentCard = ({ appointment, onUpdateStatus }) => {
                 return 'bg-gray-100 text-gray-700 border-gray-300';
         }
     };
-
-    // Assuming appointment has: name, date, time, duration, doctorName, status, mode, reason, consultation
     const { id, name, date, time, duration, doctorName, status, mode, reason, consultation } = appointment;
     const statusStyle = getStatusStyle(status);
 
@@ -55,7 +53,7 @@ const AppointmentCard = ({ appointment, onUpdateStatus }) => {
                         <span className="mr-4">{time} - {duration}</span>
                     </div>
 
-                    {/* Reason/Consultation Details */}
+                    {/* Reason/Consultation */}
                     <div className="ml-8 mt-3 space-y-2 text-sm">
                         <p>
                             <span className="font-medium text-gray-800">Consultation:</span>
@@ -69,20 +67,20 @@ const AppointmentCard = ({ appointment, onUpdateStatus }) => {
 
                 </div>
 
-                {/* Right Section: Status and Actions */}
+                {/* Status and Actions */}
                 <div className="flex flex-col items-end">
                     {/* Status Badge */}
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusStyle} mb-4 border`}>
                         {status}
                     </span>
 
-                    {/* Action Buttons (Simplified for assignment, matching icons from mockup) */}
+                    {/* Action Buttons */}
                     <div className="flex space-x-2 text-gray-500">
                         {/* Edit Button */}
                         <button className="p-1 rounded-full hover:bg-gray-100" title="Edit Appointment">
                             <BsPencilSquare className="w-4 h-4" />
                         </button>
-                        {/* Cancel Button - Example of using the mutation function */}
+                        {/* Cancel Button*/}
                         <button
                             onClick={() => onUpdateStatus(id, 'Cancelled')}
                             className="p-1 rounded-full hover:bg-red-100 hover:text-red-600"

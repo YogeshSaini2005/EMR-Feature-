@@ -63,8 +63,7 @@ const DashboardCards = ({ todayCount = 0, confirmedCount = 0, upcomingCount = 0,
         <div className="flex justify-between items-center space-x-4 p-4">
             {/* Render each card */}
             {cardData.map((card, index) => (
-                // Note: The UI mockup (Page 3) shows specific counts and colors.
-                // We use generic props here, but styling matches the look.
+            
                 <Card
                     key={index}
                     title={card.title}

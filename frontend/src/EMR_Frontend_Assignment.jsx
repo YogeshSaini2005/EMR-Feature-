@@ -63,7 +63,6 @@ export default function AppointmentManagementView() {
             prev.map(a => (a.id === updated.id ? updated : a))
           );
       } else {
-          // 💥 FIX APPLIED HERE: Changed double quotes to backticks (`...`)
           console.error(`Status update failed for ID ${id}. API returned invalid data.`, updated);
       }
 
@@ -118,6 +117,49 @@ export default function AppointmentManagementView() {
   const handleDoctorChange = (e) => {
       setSelectedDoctorFilter(e.target.value);
   }
+  
+  // --- 6. EXPORT FUNCTIONALITY (New Addition) ---
+  const exportToCSV = () => {
+    if (!filteredAppointments.length) {
+      alert("No data to export.");
+      return;
+    }
+    
+    // 1. Get the headers (keys from the first object)
+    const headers = Object.keys(filteredAppointments[0]);
+    
+    // 2. Format the data rows
+    const csvRows = [];
+    
+    // Add header row
+    csvRows.push(headers.join(','));
+    
+    // Add data rows
+    for (const row of filteredAppointments) {
+      const values = headers.map(header => {
+        const value = row[header];
+        // Handle values that might contain commas or newlines by wrapping in quotes
+        const escaped = ('' + value).replace(/"/g, '\\"'); 
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(','));
+    }
+    
+    // 3. Create the CSV file content
+    const csvString = csvRows.join('\n');
+    
+    // 4. Trigger download
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `appointments_export_${new Date().toISOString().split('T')[0]}.csv`;
+    
+    // Append link to body, click it, and remove it
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -127,9 +169,15 @@ export default function AppointmentManagementView() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Appointment Management</h1>
           <div className="flex space-x-3">
-            <button className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            
+            {/* EXPORT BUTTON with onClick handler */}
+            <button 
+              onClick={exportToCSV}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
               Export
             </button>
+            
             <button
               onClick={() => setShowForm(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
